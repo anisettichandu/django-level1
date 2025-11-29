@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password,check_password
 from django.views.decorators.csrf import csrf_exempt
 import json
+import jwt
+from django.conf import settings
 from review.models import Movie_details,Stu_details
 # Create your views here.
 def basic(request):
@@ -94,7 +96,13 @@ def log(request):
         password=data.get("password")
         data1=Stu_details.objects.get(id= ref_id)
         if check_password(password,data1.password):
-            return JsonResponse({"status":"login"})
+            payload={
+                "name":data1.name,
+                "email":data1.email,
+                "password":data1.password
+            }
+            token=jwt.encode(payload,settings.SECRET_KEY,algorithm="HS256")
+            return JsonResponse({"status":"login","ss":token})
         else:
             return JsonResponse({"status":"invalid"})
     elif request.method=="PUT":
