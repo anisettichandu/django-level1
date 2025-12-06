@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import jwt
 from django.conf import settings
+from datetime import datetime,timedelta
+from zoneinfo import ZoneInfo
 from review.models import Movie_details,Stu_details
 # Create your views here.
 def basic(request):
@@ -79,6 +81,7 @@ def movies(request):
 def student(request):
     if request.method=="POST":
         data=json.loads(request.body)
+        
         Stu_details.objects.create(
         name=data.get("name"),
         email=data.get("email"),
@@ -92,19 +95,23 @@ def student(request):
 def log(request):
     if request.method=="POST":
         data=json.loads(request.body)
+        issued_time=datetime.now(ZoneInfo("Asia/kolkata"))
+        expired_time=issued_time+timedelta(hours=1)
         ref_id=data.get("ref_id")
         password=data.get("password")
-        data1=Stu_details.objects.get(id= ref_id)
-        if check_password(password,data1.password):
+        result=Stu_details.objects.get(id=ref_id)
+        if check_password(password,result.password):
             payload={
-                "name":data1.name,
-                "email":data1.email,
-                "password":data1.password
+                "name":result.name,
+                "email":result.email,
+                "password":result.password,
+                "exp":int(expired_time.timestamp())
             }
             token=jwt.encode(payload,settings.SECRET_KEY,algorithm="HS256")
-            return JsonResponse({"status":"login","ss":token})
+            return JsonResponse({"status":"login success","token":token,"issued":issued_time,"expired":expired_time,"expired in":int((expired_time-issued_time).total_seconds())})
         else:
-            return JsonResponse({"status":"invalid"})
+            return JsonResponse({"result":"invalid"})
+   
     elif request.method=="PUT":
         data=json.loads(request.body)
         ref_id=data.get("ref_id")
@@ -120,6 +127,24 @@ def log(request):
         exist.delete()
         return JsonResponse({"status":"Data deleted "},status=200)
     return JsonResponse({"error":"invalid"})
+@csrf_exempt
+def deo(request):
+    if request.method=="GET":
+        users=list(Stu_details.objects.values())
+        print(request.token_data)
+        for user in users:
+            if user["name"]==request.token_data.get("name"):
+                return JsonResponse({"status":"LoggedIn Success","data":users,"logged by":user["name"]})
+        else:
+            return JsonResponse({"status":"invalid user"})
+    return JsonResponse({"status":"invalid"})
+    
+        # token=request.headers.get("Authorization")
+    #     token_value=token.split(" ")[1]
+    #     deco=jwt.decode(token_value,settings.SECRET_KEY,algorithms="HS256")
+    #     return JsonResponse({"status":"success","data":deco})
+    # return JsonResponse({"error":"invalid"})
+
 
     
 

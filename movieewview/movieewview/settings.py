@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'review.middleware.movie_info',
+    'review.middleware.cheching',
 ]
 
 ROOT_URLCONF = 'movieewview.urls'
