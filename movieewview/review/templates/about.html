@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1{
+            background-color: aquamarine;
+            color: blueviolet;
+            border: 3px dotted black;
+        }
+    </style>
+</head>
+<body>
+    {% extends 'welcome.html' %}
+    
+    {% block content%}
+    <h1>welcome to the about page</h1>
+    {% endblock %}
+</body>
+</html>

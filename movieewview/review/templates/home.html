@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1{
+            background-color: aqua;
+            color: red;
+            border: 2px double yellow;
+          
+            margin-top: 20px;
+        }
+        a{
+            text-decoration: none;
+            background-color: red;
+            color: white;
+            padding: 10px;
+            display: inline-block;
+            
+        }
+    </style>
+</head>
+<body>
+    {% extends 'welcome.html' %}
+   {% block content%}
+    <h1>welcome to the home</h1>
+    {% endblock %}
+</body>
+</html>

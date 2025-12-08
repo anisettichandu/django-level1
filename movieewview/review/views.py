@@ -144,6 +144,21 @@ def deo(request):
     #     deco=jwt.decode(token_value,settings.SECRET_KEY,algorithms="HS256")
     #     return JsonResponse({"status":"success","data":deco})
     # return JsonResponse({"error":"invalid"})
+    
+def home(request):
+    return render(request,"home.html")
+
+def about(request):
+    return render(request, "about.html")
+
+def welcome(request):
+    return render(request ,"welcome.html")
+def contact(request):
+    return render(request,"contact.html")
+def services(request):
+    return render(request,"services.html")
+def project(request):
+    return render(request,"project.html")
 
 
     
